@@ -1,9 +1,8 @@
-package Laboratorio.Practica9; // La ruta debe ser idéntica a la de main
+package Laboratorio.Practica9;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
-
 import java.util.List;
 
 public class GestorEstudiantesLogicTest {
@@ -13,72 +12,62 @@ public class GestorEstudiantesLogicTest {
     @BeforeEach
     void setUp() {
         gestor = new GestorEstudiantesLogic();
+        gestor.agregarEstudiante(new Estudiante("Erick Monjardin", 12345, "6to", 9.5));
+        gestor.agregarEstudiante(new Estudiante("Adrian Cardona", 54321, "6to", 8.8));
     }
 
     @Test
-    void testFiltrarPorGradoExacto() {
-        gestor.agregarEstudiante(new Estudiante("Juan", 101, "1A", 8.0));
-        gestor.agregarEstudiante(new Estudiante("Ana", 102, "2B", 9.0));
-        gestor.agregarEstudiante(new Estudiante("Luis", 103, "1A", 7.5));
-        
-        List<Estudiante> filtrados = gestor.filtrarEstudiantes("1A", Integer.MIN_VALUE, Integer.MAX_VALUE);
-        
-        assertEquals(2, filtrados.size());
-        assertTrue(filtrados.stream().allMatch(e -> e.getGrado().equals("1A")));
+    void testPU1_BusquedaInterpolada() {
+        Estudiante exito = gestor.busquedaInterpolada(12345);
+        assertNotNull(exito, "Debe encontrar al estudiante con matrícula 12345");
+        assertEquals("Erick Monjardin", exito.getNombre());
+
+        Estudiante fallo = gestor.busquedaInterpolada(99999);
+        assertNull(fallo, "Debe retornar null al buscar una matrícula inexistente");
     }
 
     @Test
-    void testFiltrarPorRangoDeMatricula() {
-        gestor.agregarEstudiante(new Estudiante("Juan", 100, "1A", 8.0));
-        gestor.agregarEstudiante(new Estudiante("Ana", 150, "2B", 9.0));
-        gestor.agregarEstudiante(new Estudiante("Luis", 200, "3C", 7.5));
-        
-        List<Estudiante> filtrados = gestor.filtrarEstudiantes("", 120, 250);
-        
-        assertEquals(2, filtrados.size());
-        assertEquals("Ana", filtrados.get(0).getNombre());
-        assertEquals("Luis", filtrados.get(1).getNombre());
+    void testPU2_BusquedaBinaria() {
+        Estudiante exito = gestor.busquedaBinariaNombre("Adrian Cardona");
+        assertNotNull(exito, "Debe encontrar a Adrian Cardona");
+        assertEquals(54321, exito.getMatricula());
+
+        Estudiante fallo = gestor.busquedaBinariaNombre("Usuario Fantasma");
+        assertNull(fallo, "Debe retornar null al buscar un nombre que no existe");
     }
 
     @Test
-    void testFiltrarSinRestriccionesDevuelveTodos() {
-        gestor.agregarEstudiante(new Estudiante("Juan", 100, "1A", 8.0));
-        gestor.agregarEstudiante(new Estudiante("Ana", 150, "2B", 9.0));
-        
-        List<Estudiante> filtrados = gestor.filtrarEstudiantes("", Integer.MIN_VALUE, Integer.MAX_VALUE);
-        
-        assertEquals(2, filtrados.size());
-    }
-    
-    @Test
-    void testAgregarEstudianteExitosamente() {
-        Estudiante e = new Estudiante("Juan Perez", 101, "3A", 9.5);
-        gestor.agregarEstudiante(e);
-        
-        assertTrue(gestor.existeMatricula(101));
-        assertEquals(1, gestor.getTodos().size());
-    }
+    void testPU3_InsercionYDuplicados() {
+        Estudiante nuevo = new Estudiante("Emmanuel Romo", 111, "1ro", 10.0);
+        gestor.agregarEstudiante(nuevo);
+        assertTrue(gestor.existeMatricula(111), "El estudiante nuevo debe ser agregado con éxito");
 
-    @Test
-    void testAgregarEstudianteFallaPorPromedioInvalido() {
-        Estudiante e = new Estudiante("Ana Gomez", 102, "2B", 11.0);
-        
+        Estudiante duplicado = new Estudiante("Emmanuel Clon", 111, "2do", 8.0);
         Exception exception = assertThrows(IllegalArgumentException.class, () -> {
-            gestor.agregarEstudiante(e);
+            gestor.agregarEstudiante(duplicado);
         });
-        
+        assertEquals("La matrícula ya existe", exception.getMessage());
+    }
+
+    @Test
+    void testPU4_ValidacionPromedio() {
+        Estudiante valido = new Estudiante("Juan Perez", 222, "3ro", 8.5);
+        gestor.agregarEstudiante(valido);
+        assertTrue(gestor.existeMatricula(222));
+
+        Estudiante invalido = new Estudiante("Test Negativo", 333, "3ro", -5.0);
+        Exception exception = assertThrows(IllegalArgumentException.class, () -> {
+            gestor.agregarEstudiante(invalido);
+        });
         assertEquals("El promedio debe estar entre 0 y 10", exception.getMessage());
     }
 
     @Test
-    void testBusquedaInterpoladaEncuentraEstudiante() {
-        gestor.agregarEstudiante(new Estudiante("Juan", 100, "1A", 8.0));
-        gestor.agregarEstudiante(new Estudiante("Ana", 200, "1A", 9.0));
-        gestor.agregarEstudiante(new Estudiante("Luis", 300, "1A", 7.0));
-        
-        Estudiante resultado = gestor.busquedaInterpolada(200);
-        
-        assertNotNull(resultado);
-        assertEquals("Ana", resultado.getNombre());
+    void testPU5_FiltradoGrado() {
+        List<Estudiante> exito = gestor.filtrarEstudiantes("6to", Integer.MIN_VALUE, Integer.MAX_VALUE);
+        assertEquals(2, exito.size(), "Debe encontrar 2 estudiantes en 6to grado");
+
+        List<Estudiante> fallo = gestor.filtrarEstudiantes("Universidad", Integer.MIN_VALUE, Integer.MAX_VALUE);
+        assertEquals(0, fallo.size(), "Debe retornar una lista vacía para un grado inexistente");
     }
 }
