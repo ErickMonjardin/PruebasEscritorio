@@ -176,6 +176,7 @@ public class GestionEstudiantil extends JFrame {
             if (encontrado != null) {
                 // List.of() requiere Java 9+. Si usas Java 8, usa Arrays.asList(encontrado)
                 actualizarTabla(java.util.Collections.singletonList(encontrado));
+                JOptionPane.showMessageDialog(this, "Estudiante encontrado", "Búsqueda", JOptionPane.INFORMATION_MESSAGE);
             } else {
                 JOptionPane.showMessageDialog(this, "No se encontró estudiante", "Búsqueda", JOptionPane.INFORMATION_MESSAGE);
             }

@@ -6,6 +6,7 @@ COORD_TXT_NOMBRE = (1425, 59)
 COORD_TXT_BUSQUEDA = (1320, 1438)
 COORD_BTN_BUSCAR = (2125, 1441)
 COORD_BTN_MOSTRAR_TODOS = (1304, 1487)
+COORD_BTN_MODIFICAR = (435,1485)
 PAUSA = 2.0
 
 def test_pui1_alta_estudiante():
@@ -64,4 +65,23 @@ def test_pui4_mostrar_todos():
     time.sleep(PAUSA)
     pyautogui.press('space')
     time.sleep(PAUSA)
+    assert True
+
+def test_pui5_modificar_nombre():
+    pyautogui.click(COORD_TXT_BUSQUEDA)
+    pyautogui.press('backspace')
+    pyautogui.press('backspace')
+    pyautogui.press('backspace')
+    time.sleep(PAUSA)
+    pyautogui.write("333")
+    pyautogui.press('tab')
+    pyautogui.press('space')
+    time.sleep(PAUSA)
+    pyautogui.press('space')
+    pyautogui.click(COORD_TXT_NOMBRE)
+    time.sleep(PAUSA)
+    pyautogui.write("Juan Perez Modificado")
+    pyautogui.click(COORD_BTN_MODIFICAR)
+    time.sleep(PAUSA)
+    pyautogui.press('space')
     assert True
