@@ -33,11 +33,11 @@ public class GestionEstudiantil extends JFrame {
         setLayout(new BorderLayout(10, 10));
         
          // Cargar iconos (Manejo simple para evitar errores si no existen las imágenes)
-        ImageIcon addIcon = cargarIcono("add.png", 20, 20);
-        ImageIcon searchIcon = cargarIcono("search.png", 20, 20);
-        ImageIcon editIcon = cargarIcono("edit.png", 20, 20);
-        ImageIcon listIcon = cargarIcono("list.png", 20, 20);
-        ImageIcon filterIcon = cargarIcono("filter.png", 20, 20);
+        ImageIcon addIcon = cargarIcono("/add.png", 20, 20);
+        ImageIcon searchIcon = cargarIcono("/search.png", 20, 20);
+        ImageIcon editIcon = cargarIcono("/edit.png", 20, 20);
+        ImageIcon listIcon = cargarIcono("/list.png", 20, 20);
+        ImageIcon filterIcon = cargarIcono("/filter.png", 20, 20);
     
         btnAgregar = new JButton("Agregar", addIcon);
         btnBuscar = new JButton("Buscar", searchIcon);
@@ -223,6 +223,7 @@ public class GestionEstudiantil extends JFrame {
     
     private void mostrarTodos() {
         actualizarTabla(gestorLogic.getTodos());
+        JOptionPane.showMessageDialog(this, "Mostrando todos los estudiantes");
     }
     
     private void filtrarEstudiantes() {

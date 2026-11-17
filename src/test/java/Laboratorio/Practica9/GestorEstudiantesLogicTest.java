@@ -32,7 +32,7 @@ public class GestorEstudiantesLogicTest {
         assertNotNull(exito, "Debe encontrar a Adrian Cardona");
         assertEquals(54321, exito.getMatricula());
 
-        Estudiante fallo = gestor.busquedaBinariaNombre("Usuario Fantasma");
+        Estudiante fallo = gestor.busquedaBinariaNombre("Nombre Inexistente");
         assertNull(fallo, "Debe retornar null al buscar un nombre que no existe");
     }
 
